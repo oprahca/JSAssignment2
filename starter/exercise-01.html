@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Fetch API Exercise Lab</title>
+</head>
+
+<body>
+  <div id="container">
+    <h1>The Fetch API Exercises</h1>
+    <p>Open the web inspector console to test.</p>
+    <p><button type="button" id="load-photo">Load Dog Photo</button></p>
+  </div>
+</body>
+<script>
+  const button = document.querySelector(`#load-photo`);
+  // function to return the data
+  function init() {
+    button.addEventListener(`click`, handleButton)
+  }
+
+  // async function to execute the data and methods
+  async function handleButton(e) {
+    e.preventDefault()
+    loadSpinner();
+    const data = await getRandomDogPhoto();
+    removeSpinner();
+    renderDogPhoto(data.message);
+  }
+
+  init();
+
+  // function to get random dog photo to return fetch request
+  function getRandomDogPhoto() {
+    const url = `https://dog.ceo/api/breeds/image/random`;
+    return fetch(url)
+      .then(response => response.json())
+      .catch(error => console.error(error));
+  }
+
+  // get the url of the image and inser the html
+  function renderDogPhoto(url) {
+    const img = `<img style='max-width:100%;' src="${url}" alt="Random photo of a dog" />`;
+    document.querySelector(`#container`).insertAdjacentHTML(`beforeend`, img);
+  }
+
+  // add loading image when waiting for dog photo
+  function loadSpinner() {
+    const spinner = `../assets/loader.svg`;
+    const img = `<p><img src="${spinner}" id="spinner" alt="Loading spinner image" /></p>`;
+    button.disabled = true;
+    button.insertAdjacentHTML(`afterbegin`, img);
+  }
+
+  // remove loading image before displaying the dog photo
+  function removeSpinner() {
+    const spinner = document.querySelector(`#spinner`);
+    button.parentElement.removeChild(button);
+  }
+</script>
+
+</html>
